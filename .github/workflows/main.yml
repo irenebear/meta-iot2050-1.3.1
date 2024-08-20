@@ -25,10 +25,10 @@ jobs:
           sudo apt-get install python3-sphinx-rtd-theme # documentation style
       - name: Build open62541
         run: |
-          cd open62541
+          cd /git
           mkdir build
           cd build
-          cmake ..
+          cmake --build .
           make
       - name: Free Disk Space
         uses: ./.github/workflows/free-disk-space
