@@ -19,7 +19,6 @@ jobs:
           sudo apt-get install -y build-essential git python3 python3-pip cmake
       - name: Build open62541
         run: |
-          source setup-env
           bitbake -c compile open62541
       - name: Free Disk Space
         uses: ./.github/workflows/free-disk-space
