@@ -25,7 +25,6 @@ jobs:
           sudo apt-get install python3-sphinx-rtd-theme # documentation style
       - name: Build open62541
         run: |
-          cd /git
           mkdir build
           cd build
           cmake --build .
