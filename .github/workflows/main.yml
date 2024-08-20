@@ -13,6 +13,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git python3 python3-pip cmake
+      - name: Set up build environment
+        run: |
+         ./kas-container build kas-iot2050-example.yml
+      - name: Build open62541
+        run: |
+          source setup-env
+          bitbake -c compile open62541
       - name: Free Disk Space
         uses: ./.github/workflows/free-disk-space
       - name: Build image
@@ -24,42 +35,3 @@ jobs:
           path: |
             build/tmp/deploy/images/iot2050/iot2050-image-example-iot2050-debian-iot2050.wic
             build/tmp/deploy/images/iot2050/iot2050-image-example-iot2050-debian-iot2050.wic.bmap
-
-  debian-swupdate-image:
-    name: Debian secure boot SWUpdate image
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Free Disk Space
-        uses: ./.github/workflows/free-disk-space
-      - name: Mock EIO binary stubs
-        run: |
-          touch ./recipes-app/iot2050-eio-manager/files/bin/iot2050-eiofsd
-          touch ./recipes-app/iot2050-eio-manager/files/bin/map3-fw.bin
-          touch ./recipes-app/iot2050-eio-manager/files/bin/firmware-version
-      - name: Build image
-        run: ./kas-container build kas-iot2050-swupdate.yml:kas/opt/secure-boot.yml:kas/opt/preempt-rt.yml:kas/opt/eio.yml
-      - name: Upload image
-        uses: actions/upload-artifact@v4
-        with:
-          name: iot2050-secureboot-swu-image
-          path: |
-            build/tmp/deploy/images/iot2050/iot2050-image-swu-example-iot2050-debian-iot2050.wic
-            build/tmp/deploy/images/iot2050/iot2050-image-swu-example-iot2050-debian-iot2050.wic.bmap
-
-  bootloaders:
-    name: Bootloaders
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Free Disk Space
-        uses: ./.github/workflows/free-disk-space
-      - name: Build bootloader image
-        run: ./kas-container build kas-iot2050-boot.yml
-      - name: Archive bootloaders
-        uses: actions/upload-artifact@v4
-        with:
-          name: iot2050-bootloaders
-          path: build/tmp/deploy/images/iot2050/*.bin
