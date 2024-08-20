@@ -10,7 +10,6 @@
 
 require recipes-core/images/iot2050-image-base.bb
 require recipes-core/images/iot2050-package-selections.inc
-IMAGE_INSTALL += "open62541"
 
 DESCRIPTION = "IOT2050 Debian Example Image"
 
